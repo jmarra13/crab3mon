@@ -54,6 +54,20 @@ def sanitize(sites):
   sites.append(["T1_DE_KIT","c.*.gridka.de"])
   return sites
 
+def condorStatus(glideInName):
+    condorSt = "UNKNOWN_SITE"
+    try:
+        condorStatusCmd = "condor_status -const 'GLIDEIN_MASTER_NAME == \"%s\"' -af glidein_cmssite"%glideInName
+        condorSt = str(subprocess.Popen(condorStatusCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.read())
+        condorSt = condorSt.strip()
+    except:
+        pass
+
+    if len(condorSt) == 0:
+       condorSt = "UNKNOWN_SITE"
+
+    return condorSt
+
 def domainNameToSiteName(domainToFind):
         # T2_BR_UERJ dont have public IPs on WN, it use this pattern to name
 	# it's WN, node-X-X.hepgrid.local
