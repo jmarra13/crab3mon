@@ -68,38 +68,28 @@ def condorStatus(glideInName):
 
     return condorSt
 
-def domainNameToSiteName(domainToFind):
-        # T2_BR_UERJ dont have public IPs on WN, it use this pattern to name
-	# it's WN, node-X-X.hepgrid.local
-        pattern = '.hepgrid.local'
-        p = re.compile(pattern)
-        m = p.match(domainToFind)
-        if m:
-           return u'T2_BR_UERJ'
+def domainNameToSiteName(domainToFind,glideInName):
+    phedexDataUrl = 'http://cmsweb.cern.ch/phedex/datasvc/json/prod/nodes'
+    phedexAPI=urlopen(phedexDataUrl)
+    jsonRAW=phedexAPI.readlines()
+    jsonStr=''.join(jsonRAW)
+    jsonList=json.loads(jsonStr)
+    nodes = jsonList['phedex']['node']
 
-        # T2_BR_SPRACE dont have public IPs on WN, it use this pattern to name
-        # it's WN, nodeXXX.local
-        pattern = '.local'
-        p = re.compile(pattern)
-        m = p.match(domainToFind)
-        if m:
-           return u'T2_BR_SPRACE'
+    sites = [ [str(site['name']).encode('string-escape'),str(site['se']).encode('string-escape')] for site in nodes ]
+    sites = [ [x[0],x[1].split('.') ] for x in sites ]
+    sitesPerDomain = [ [x[0],".".join(x[1][1:len(x[1])])] for x in sites ]
+    sitesPerDomain = sanitize(sitesPerDomain)
 
+    for oneSite in sitesPerDomain:
+       reg = re.compile(oneSite[1])
+       match = re.search(reg, domainToFind)
+       if match:
+           return oneSite[0]
 
-        phedexDataUrl = 'http://cmsweb.cern.ch/phedex/datasvc/json/prod/nodes'
-        phedexAPI=urlopen(phedexDataUrl)
-        jsonRAW=phedexAPI.readlines()
-        jsonStr=''.join(jsonRAW)
-        jsonList=json.loads(jsonStr)
-        nodes = jsonList['phedex']['node']
-        sites = [ [site['name'],site['se']] for site in nodes ]
-        sites = filter(lambda a: a[1] != None, sites)
-        sites = [ [x[0],x[1].split('.') ] for x in sites ]
-        sitesPerDomain = [ [x[0],".".join(x[1][1:len(x[1])])] for x in sites ]
-        for oneSite in sitesPerDomain:
-                if oneSite[1] == domainToFind:
-                        return oneSite[0]
-        return "Domain not found"
+    # if site was not found in phedex api try to fetch from collector using the glideinName
+    # condor_status -const 'GLIDEIN_MASTER_NAME == "glidein_3215_231573213@lnxfarm263.colorado.edu"' -af glidein_cmssite
+    return condorStatus(glideInName)
 
 
 class check_glexec(Metric):
@@ -137,7 +127,7 @@ class check_glexec(Metric):
         timeStamp = timeStamp + startH + ":" + startM
         self.log(SENSOR_LOG_INFO, "Time used: %s"%(timeStamp))
 
-        glexec_reg = '%s.*ERROR "Error from glidein.*@(.*): error changing sandbox ownership to the user: condor_glexec_setup exited with'%(timeStamp)
+        glexec_reg = '%s.*ERROR "Error from (.*): error changing sandbox ownership to the user: condor_glexec_setup exited with'%(timeStamp)
 
         reg = re.compile(glexec_reg)
 
@@ -172,7 +162,7 @@ class check_glexec(Metric):
             for host in errorCount:
                 domainToFind = host[1].split('.')
                 domainToFind = '.'.join(domainToFind[1:len(domainToFind)])
-                domainName = domainNameToSiteName(domainToFind)
+                domainName = domainNameToSiteName(domainToFind,host[1])
                 self.storeSample01("%d %s %s"%(host[0],host[1],domainName))
 
         else:
