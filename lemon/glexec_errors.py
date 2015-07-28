@@ -20,6 +20,40 @@ registerMetric(
    "Find for glexec errors at condor shadow logs",
    "glexec_errors.check_glexec")
 
+def sanitize(sites):
+  # sites that share the same domain
+  # name with other sites(v.g. in2p3 sites)
+  siteRegx = [
+               ["T2_FR_IPHC", "sbgwn.*.in2p3.fr"],
+               ["T2_FR_GRIF_LLR","(polgrid|llrgrwn).*.in2p3.fr" ],
+               ["T2_FR_GRIF_IRFU","wn.*.datagrid.cea.fr"],
+               ["T3_FR_IPNL","lyowork.*.in2p3.fr"],
+               ["T2_FR_CCIN2P3","ccwsge.*.in2p3.fr"],
+               ["T2_CH_CERN",".*.cern.ch"],
+               ["T1_UK_RAL","lcg.*.gridpp.rl.ac.uk"]
+             ]
+
+
+  # remove all sites without a SE defined
+  sites = filter(lambda a: a[1] != '', sites)
+
+  # remove all _DISK, _BUFFER, _MSS instances
+  sites = filter(lambda a: "DISK" not in a[0].upper(), sites)
+  sites = filter(lambda a: "BUFFER" not in a[0].upper(), sites)
+  sites = filter(lambda a: "MSS" not in a[0].upper(), sites)
+
+  idx = 0
+  for site in sites:
+    for reg in siteRegx:
+      if reg[0] == site[0]:
+        sites[idx] = reg
+    idx += 1
+
+  # sites defined at phedex api but removed because they only have _DISK, _BUFFER and _MSS 
+  # instances
+  sites.append(["T1_DE_KIT","c.*.gridka.de"])
+  return sites
+
 def domainNameToSiteName(domainToFind):
         # T2_BR_UERJ dont have public IPs on WN, it use this pattern to name
 	# it's WN, node-X-X.hepgrid.local
