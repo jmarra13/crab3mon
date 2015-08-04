@@ -21,6 +21,7 @@
           "editable": true,
           "error": false,
           "loadingEditor": false,
+          "hide": true,
           "panels": [
             {
               "type": "filtering",
@@ -157,7 +158,7 @@
       ]
     }
   ],
-  "title": "CRAB3 Monitoring - gLexec Errors by site",
+  "title": "'CRAB3 Monitoring - gLexec Errors[ ' {{ ARGS.site || '*'}} ' ]'",
   "failover": false,
   "editable": true,
   "refresh": "5m",
@@ -269,7 +270,7 @@
           "pin": false,
           "color": "#64B0C8",
           "alias": "gLexec Errors",
-          "query": "@message.siteName:*",
+          "query": "@message.siteName:{{ ARGS.site || '*'}}", 
           "type": "lucene",
           "id": 8
         }
