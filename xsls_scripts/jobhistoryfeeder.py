@@ -10,6 +10,13 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 
 fmt = "%Y-%m-%dT%H:%M:%S%z"
 
+# since ES search is hosted at CERN
+# we should set timezone to Europe/Zurich
+# otherwise the publication will fail due
+# timezone difference 
+
+os.environ['TZ'] = "Europe/Zurich"
+
 class jobHistoryFeed(object):
     def __init__(self, perJobHistoryDir):
         self.filesToParse = []
@@ -106,6 +113,7 @@ class jobHistoryFeed(object):
 
     def publishXML(self,xmlFile):
         # push the XML to elasticSearch 
+        return 1 # just to disable publication on ES since it will not work from outside of CERN
         try:
             cmd = "curl -i -F file=@" + xmlFile + " xsls.cern.ch"
             pu = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -187,4 +195,3 @@ if __name__ == '__main__':
     feeder2 = jobHistoryFeed('SCHEDD.SECOND.PER_JOB_HISTORY_DIR')
     if feeder2.isRunable():
         feeder2.execute()
-
