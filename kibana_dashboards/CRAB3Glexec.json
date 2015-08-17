@@ -246,8 +246,8 @@
     "filter": {
       "list": {
         "0": {
-          "from": "now-3h",
-          "to": "now",
+          "from": "{{ARGS.from || 'now-3h'}}",
+          "to": "{{ARGS.to || 'now'}}",
           "field": "@timestamp",
           "alias": "",
           "mandate": "must",
