@@ -9,54 +9,9 @@
   "rows": [
     {
       "notice": false,
-      "collapsable": false,
-      "collapse": false,
-      "title": "",
-      "editable": true,
-      "height": "350px",
       "panels": [
         {
-          "labels": false,
-          "tmode": "terms_stats",
-          "valuefield": "@message.nv_value",
-          "exclude": [],
-          "spyable": true,
-          "sls": false,
-          "size": 10,
-          "style": {
-            "font-size": "10pt"
-          },
-          "span": 2,
-          "title": "Average # of Tasks  by Status",
-          "tilt": false,
-          "arrangement": "horizontal",
-          "field": "@message.nv_name",
-          "other": true,
-          "loadingEditor": false,
-          "type": "terms",
-          "missing": false,
-          "queries": {
-            "mode": "selected",
-            "ids": [
-              0,
-              1,
-              2,
-              3,
-              4
-            ]
-          },
-          "editable": true,
-          "chart": "pie",
-          "counter_pos": "none",
-          "value_info": true,
-          "tstat": "mean",
-          "donut": true,
-          "count_column": true,
-          "error": false,
-          "order": "term"
-        },
-        {
-          "span": 6,
+          "span": 4,
           "title": "..",
           "editable": true,
           "error": false,
@@ -74,8 +29,8 @@
                 ],
                 "query": "*",
                 "enable": false,
-                "size": 20,
-                "field": "_type"
+                "field": "_type",
+                "size": 20
               },
               "intervals": [
                 "auto",
@@ -99,25 +54,25 @@
               "span": 10,
               "title": "[1] Count of Tasks entering a given status per 2h interval",
               "tooltip": {
-                "value_type": "cumulative",
-                "query_as_alias": true
+                "query_as_alias": true,
+                "value_type": "cumulative"
               },
-              "stack": false,
+              "legend": true,
               "removable": false,
               "percentage": false,
               "auto_int": false,
               "type": "multifieldhistogram",
               "x-axis": true,
               "editable": true,
+              "interval": "10m",
               "grid": {
                 "max": null,
                 "min": 0
               },
-              "legend": true,
+              "stack": false,
               "legend_counts": false,
-              "y-axis": true,
               "time_field": "@timestamp",
-              "interval": "10m",
+              "y-axis": true,
               "lines": true,
               "y_format": "none",
               "draggable": false,
@@ -138,36 +93,12 @@
                 {
                   "value_field": "@message.nv_value",
                   "scale": 1,
-                  "color": "#EAB839",
-                  "zerofill": false,
-                  "alias": "Queued",
-                  "mode": "mean",
-                  "queries": [
-                    0
-                  ],
-                  "derivative": false
-                },
-                {
-                  "value_field": "@message.nv_value",
-                  "scale": 1,
                   "color": "#890F02",
                   "zerofill": false,
                   "alias": "Failed",
                   "mode": "mean",
                   "queries": [
                     1
-                  ],
-                  "derivative": false
-                },
-                {
-                  "value_field": "@message.nv_value",
-                  "scale": 1,
-                  "color": "#C15C17",
-                  "zerofill": true,
-                  "alias": "New",
-                  "mode": "mean",
-                  "queries": [
-                    4
                   ],
                   "derivative": false
                 },
@@ -182,6 +113,42 @@
                     2
                   ],
                   "derivative": false
+                },
+                {
+                  "mode": "mean",
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "zerofill": true,
+                  "derivative": false,
+                  "queries": [
+                    56
+                  ],
+                  "color": null,
+                  "alias": "ResubmitFailed"
+                },
+                {
+                  "mode": "mean",
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "zerofill": true,
+                  "derivative": false,
+                  "queries": [
+                    55
+                  ],
+                  "color": null,
+                  "alias": "SubmitFailed"
+                },
+                {
+                  "mode": "mean",
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "zerofill": true,
+                  "derivative": false,
+                  "queries": [
+                    54
+                  ],
+                  "color": null,
+                  "alias": "KillFailed"
                 }
               ],
               "pointradius": 5,
@@ -190,19 +157,144 @@
               "interactive": true
             },
             {
-              "draggable": false,
+              "content": "If the number of failed tasks increase you can check the last failures reasons here <a href=\"https://cmsweb-testbed.cern.ch/crabserver/prod/task?subresource=lastfailures&minutes=120\">Last failed tasks</a>",
               "style": {},
               "loading": false,
               "span": 10,
               "title": "Tips",
               "editable": true,
               "height": "10px",
-              "content": "If the number of failed tasks increase you can check the last failures reasons here <a href=\"https://cmsweb-testbed.cern.ch/crabserver/prod/task?subresource=lastfailures&minutes=120\">Last failed tasks</a>",
+              "draggable": false,
               "sizeable": false,
               "mode": "html",
               "removable": false,
               "error": false,
               "type": "text"
+            }
+          ],
+          "type": "column"
+        },
+        {
+          "span": 4,
+          "title": "..",
+          "editable": true,
+          "error": false,
+          "loadingEditor": false,
+          "panels": [
+            {
+              "show_query": true,
+              "sizeable": false,
+              "zoomlinks": false,
+              "height": "200px",
+              "annotate": {
+                "sort": [
+                  "_score",
+                  "desc"
+                ],
+                "query": "*",
+                "enable": false,
+                "field": "_type",
+                "size": 20
+              },
+              "intervals": [
+                "auto",
+                "1s",
+                "1m",
+                "5m",
+                "10m",
+                "30m",
+                "1h",
+                "3h",
+                "12h",
+                "1d",
+                "1w",
+                "1y"
+              ],
+              "timezone": "browser",
+              "spyable": true,
+              "linewidth": 1,
+              "fill": 3,
+              "loading": false,
+              "span": 10,
+              "title": "[2] Count of Tasks in non final States",
+              "tooltip": {
+                "query_as_alias": true,
+                "value_type": "cumulative"
+              },
+              "legend": true,
+              "removable": false,
+              "percentage": false,
+              "auto_int": false,
+              "type": "multifieldhistogram",
+              "x-axis": true,
+              "editable": true,
+              "interval": "10m",
+              "grid": {
+                "max": null,
+                "min": 0
+              },
+              "stack": false,
+              "legend_counts": false,
+              "time_field": "@timestamp",
+              "y-axis": true,
+              "lines": true,
+              "y_format": "none",
+              "draggable": false,
+              "points": false,
+              "values": [
+                {
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "color": "#64B0C8",
+                  "zerofill": false,
+                  "alias": "New",
+                  "mode": "total",
+                  "queries": [
+                    42
+                  ],
+                  "derivative": false
+                },
+                {
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "color": "#DEDAF7",
+                  "zerofill": false,
+                  "alias": "Resubmit",
+                  "mode": "total",
+                  "queries": [
+                    43
+                  ],
+                  "derivative": false
+                },
+                {
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "color": "#890F02",
+                  "zerofill": false,
+                  "alias": "Kill",
+                  "mode": "total",
+                  "queries": [
+                    44
+                  ],
+                  "derivative": false
+                },
+                {
+                  "value_field": "@message.nv_value",
+                  "scale": 1,
+                  "color": null,
+                  "zerofill": true,
+                  "alias": "Queued",
+                  "mode": "total",
+                  "queries": [
+                    53
+                  ],
+                  "derivative": false
+                }
+              ],
+              "pointradius": 5,
+              "resolution": 100,
+              "options": false,
+              "interactive": true
             }
           ],
           "type": "column"
@@ -221,7 +313,7 @@
               "valuefield": "@message.errorCount",
               "spyable": true,
               "exclude": [],
-              "sls": false,
+              "tstat": "total_count",
               "size": 10,
               "style": {
                 "font-size": "10pt"
@@ -236,32 +328,32 @@
               "removable": false,
               "type": "terms",
               "missing": false,
+              "error": false,
+              "editable": true,
+              "chart": "bar",
+              "counter_pos": "below",
+              "value_info": true,
+              "sls": false,
+              "draggable": false,
+              "donut": false,
+              "count_column": true,
               "queries": {
                 "mode": "selected",
                 "ids": [
                   35
                 ]
               },
-              "editable": true,
-              "chart": "bar",
-              "counter_pos": "below",
-              "value_info": true,
-              "tstat": "total_count",
-              "draggable": false,
-              "donut": false,
-              "count_column": true,
-              "error": false,
               "order": "count"
             },
             {
-              "content": "To see which hosts are showing gLExec errors at a site click <a href=\"https://meter.cern.ch/public/_plugin/kibana/#/dashboard/temp/CMS::CRABglexec\" target=\"_blank\">here</a>",
+              "draggable": false,
               "style": {},
               "loading": false,
               "span": 10,
               "title": "..",
               "editable": true,
               "height": "50px",
-              "draggable": false,
+              "content": "To see which hosts are showing gLExec errors at a site click <a href=\"https://meter.cern.ch/public/_plugin/kibana/#/dashboard/temp/CMS::CRABglexec\" target=\"_blank\">here</a>",
               "sizeable": false,
               "mode": "html",
               "removable": false,
@@ -302,19 +394,19 @@
           ],
           "type": "column"
         }
-      ]
-    },
-    {
-      "notice": false,
-      "collapsable": true,
+      ],
       "collapse": false,
       "title": "",
       "editable": true,
-      "height": "250px",
+      "height": "350px",
+      "collapsable": false
+    },
+    {
+      "notice": false,
       "panels": [
         {
           "show_query": false,
-          "interval": "5m",
+          "y-axis": true,
           "zoomlinks": false,
           "annotate": {
             "sort": [
@@ -323,8 +415,8 @@
             ],
             "query": "*",
             "enable": false,
-            "size": 20,
-            "field": "_type"
+            "field": "_type",
+            "size": 20
           },
           "intervals": [
             "auto",
@@ -346,10 +438,10 @@
           "percentage": false,
           "fill": 0,
           "span": 4,
-          "title": "[2] Number of Shadows per Schedd",
+          "title": "[3] Number of Shadows per Schedd",
           "tooltip": {
-            "value_type": "individual",
-            "query_as_alias": true
+            "query_as_alias": true,
+            "value_type": "individual"
           },
           "legend": true,
           "loadingEditor": false,
@@ -364,7 +456,7 @@
           "stack": false,
           "legend_counts": false,
           "time_field": "@timestamp",
-          "y-axis": true,
+          "interval": "5m",
           "lines": true,
           "y_format": "short",
           "points": false,
@@ -401,10 +493,23 @@
               "scaleSeconds": true,
               "color": null,
               "zerofill": false,
-              "alias": "vocms095",
+              "alias": "vocms095-1",
               "mode": "mean",
               "queries": [
                 5
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "scaleSeconds": true,
+              "color": null,
+              "zerofill": false,
+              "alias": "vocms095-2",
+              "mode": "mean",
+              "queries": [
+                48
               ],
               "derivative": false
             },
@@ -418,6 +523,19 @@
               "mode": "mean",
               "queries": [
                 7
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "scaleSeconds": true,
+              "color": null,
+              "zerofill": false,
+              "alias": "submit-4",
+              "mode": "mean",
+              "queries": [
+                50
               ],
               "derivative": false
             },
@@ -467,7 +585,7 @@
         },
         {
           "show_query": false,
-          "interval": "5m",
+          "y-axis": true,
           "zoomlinks": false,
           "annotate": {
             "sort": [
@@ -476,8 +594,8 @@
             ],
             "query": "*",
             "enable": false,
-            "size": 20,
-            "field": "_type"
+            "field": "_type",
+            "size": 20
           },
           "intervals": [
             "auto",
@@ -499,10 +617,10 @@
           "percentage": false,
           "fill": 0,
           "span": 4,
-          "title": "[3] Number of Idle Jobs per Schedd",
+          "title": "[4] Number of Idle Jobs per Schedd",
           "tooltip": {
-            "value_type": "individual",
-            "query_as_alias": true
+            "query_as_alias": true,
+            "value_type": "individual"
           },
           "legend": true,
           "loadingEditor": false,
@@ -517,7 +635,7 @@
           "stack": false,
           "legend_counts": false,
           "time_field": "@timestamp",
-          "y-axis": true,
+          "interval": "5m",
           "lines": true,
           "y_format": "short",
           "points": false,
@@ -551,10 +669,22 @@
               "scale": 1,
               "color": null,
               "zerofill": false,
-              "alias": "vocms095",
+              "alias": "vocms095-1",
               "mode": "mean",
               "queries": [
                 20
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "color": null,
+              "zerofill": false,
+              "alias": "vocms095-2",
+              "mode": "mean",
+              "queries": [
+                45
               ],
               "derivative": false
             },
@@ -567,6 +697,18 @@
               "mode": "mean",
               "queries": [
                 26
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "color": null,
+              "zerofill": false,
+              "alias": "submit-4",
+              "mode": "mean",
+              "queries": [
+                51
               ],
               "derivative": false
             },
@@ -615,7 +757,7 @@
         },
         {
           "show_query": false,
-          "interval": "5m",
+          "y-axis": true,
           "zoomlinks": false,
           "annotate": {
             "sort": [
@@ -624,8 +766,8 @@
             ],
             "query": "*",
             "enable": false,
-            "size": 20,
-            "field": "_type"
+            "field": "_type",
+            "size": 20
           },
           "intervals": [
             "auto",
@@ -647,10 +789,10 @@
           "percentage": false,
           "fill": 0,
           "span": 4,
-          "title": "[4] Running DAGMAN's per schedd",
+          "title": "[5] Running DAGMAN's per schedd",
           "tooltip": {
-            "value_type": "individual",
-            "query_as_alias": true
+            "query_as_alias": true,
+            "value_type": "individual"
           },
           "legend": true,
           "loadingEditor": false,
@@ -665,7 +807,7 @@
           "stack": false,
           "legend_counts": false,
           "time_field": "@timestamp",
-          "y-axis": true,
+          "interval": "5m",
           "lines": true,
           "y_format": "short",
           "points": false,
@@ -699,10 +841,22 @@
               "scale": 1,
               "color": null,
               "zerofill": false,
-              "alias": "vocms095",
+              "alias": "vocms095-1",
               "mode": "mean",
               "queries": [
                 14
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "color": null,
+              "zerofill": true,
+              "alias": "vocms095-2",
+              "mode": "mean",
+              "queries": [
+                49
               ],
               "derivative": false
             },
@@ -715,6 +869,18 @@
               "mode": "mean",
               "queries": [
                 11
+              ],
+              "derivative": false
+            },
+            {
+              "value_field": "@message.nv_value",
+              "scale": 1,
+              "color": null,
+              "zerofill": false,
+              "alias": "submit-4",
+              "mode": "mean",
+              "queries": [
+                52
               ],
               "derivative": false
             },
@@ -761,15 +927,15 @@
           "options": false,
           "interactive": true
         }
-      ]
+      ],
+      "collapse": false,
+      "title": "",
+      "editable": true,
+      "height": "250px",
+      "collapsable": true
     },
     {
       "notice": false,
-      "collapsable": true,
-      "collapse": true,
-      "title": "RAW DATA FOR DEV/DEBUG",
-      "editable": true,
-      "height": "150px",
       "panels": [
         {
           "header": true,
@@ -849,13 +1015,21 @@
               38,
               39,
               40,
-              41
+              41,
+              42,
+              43,
+              44
             ]
           },
           "timeField": "@timestamp",
           "highlight": []
         }
-      ]
+      ],
+      "collapse": true,
+      "title": "RAW DATA FOR DEV/DEBUG",
+      "editable": true,
+      "height": "150px",
+      "collapsable": true
     }
   ],
   "title": "CRAB3 Monitoring - Overview",
@@ -871,8 +1045,8 @@
     "save_temp_ttl": "30d",
     "load_elasticsearch": true,
     "save_local": true,
-    "save_temp_ttl_enable": true,
     "save_elasticsearch": true,
+    "save_temp_ttl_enable": true,
     "save_gist": true,
     "save_default": false
   },
@@ -881,22 +1055,22 @@
       "notice": false,
       "enable": true,
       "collapse": true,
+      "remember": 10,
       "pinned": true,
       "query": "*",
-      "history": [
-        "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms066\"",
-        "vocms045 AND @message.nv_name:number_of_idle_jobs_for_at_vocms066",
-        "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms066\"",
-        "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms059\"",
-        "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms059\"",
-        "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms059\"",
-        "@fields.metric_id: \"13242\"",
-        "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_submit-5\"",
-        "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_submit-5\"",
-        "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_submit-5\""
-      ],
       "type": "query",
-      "remember": 10
+      "history": [
+        "vocms045 AND @message.nv_name:\"numberOfTasksIn_QUEUED_State\"",
+        "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-3@submit-4.t2.ucsd.edu\"",
+        "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-3@submit-4.t2.ucsd.edu\"",
+        "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-3@submit-4.t2.ucsd.edu\"",
+        "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3test-2@vocms095.cern.ch\"",
+        "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3test-2@vocms095.cern.ch\"",
+        "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3test-2@vocms095.cern.ch\"",
+        "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3test-2@vocms095.cern.ch\"",
+        "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3test-2@vocms095.cern.ch\"",
+        "vocms045 AND @message.nv_name:\"numberOfTasksIn_KILL_State\""
+      ]
     },
     {
       "notice": true,
@@ -953,13 +1127,13 @@
     "filter": {
       "list": {
         "0": {
+          "type": "time",
+          "field": "@timestamp",
           "from": "now-3h",
           "to": "now",
-          "field": "@timestamp",
-          "alias": "",
           "mandate": "must",
           "active": true,
-          "type": "time",
+          "alias": "",
           "id": 0
         }
       },
@@ -974,7 +1148,7 @@
       "list": {
         "0": {
           "enable": true,
-          "pin": false,
+          "pin": true,
           "color": "#E5AC0E",
           "alias": "queued",
           "query": "vocms045 AND @message.nv_name:\"number_of_QUEUED_tasks_in_the_last_minute\"",
@@ -1022,7 +1196,7 @@
           "pin": false,
           "color": "#7EB26D",
           "alias": "vocms095Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms095\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-6@vocms095.cern.ch\"",
           "type": "lucene",
           "id": 5
         },
@@ -1031,7 +1205,7 @@
           "pin": false,
           "color": "#EAB839",
           "alias": "vocms096Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms096\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3test-3@vocms096.cern.ch\"",
           "type": "lucene",
           "id": 6
         },
@@ -1040,7 +1214,7 @@
           "pin": false,
           "color": "#6ED0E0",
           "alias": "vocms0114Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms0114\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-7@vocms0114.cern.ch\"",
           "type": "lucene",
           "id": 7
         },
@@ -1049,7 +1223,7 @@
           "pin": false,
           "color": "#EF843C",
           "alias": "vocms0109Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms0109\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-2@vocms0109.cern.ch\"",
           "type": "lucene",
           "id": 8
         },
@@ -1058,7 +1232,7 @@
           "pin": false,
           "color": "#E24D42",
           "alias": "submit-5Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_submit-5\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-1@submit-5.t2.ucsd.edu\"",
           "type": "lucene",
           "id": 9
         },
@@ -1067,7 +1241,7 @@
           "pin": false,
           "color": "#EAB839",
           "alias": "vocms096SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms096\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3test-3@vocms096.cern.ch\"",
           "type": "lucene",
           "id": 10
         },
@@ -1076,7 +1250,7 @@
           "pin": false,
           "color": "#6ED0E0",
           "alias": "vocms0114SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms0114\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-7@vocms0114.cern.ch\"",
           "type": "lucene",
           "id": 11
         },
@@ -1085,7 +1259,7 @@
           "pin": false,
           "color": "#E24D42",
           "alias": "submit-5SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_submit-5\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-1@submit-5.t2.ucsd.edu\"",
           "type": "lucene",
           "id": 12
         },
@@ -1094,7 +1268,7 @@
           "pin": false,
           "color": "#EF843C",
           "alias": "vocms0109SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms0109\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-2@vocms0109.cern.ch\"",
           "type": "lucene",
           "id": 13
         },
@@ -1103,7 +1277,7 @@
           "pin": false,
           "color": "#7EB26D",
           "alias": "vocms095SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms095\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-6@vocms095.cern.ch\"",
           "type": "lucene",
           "id": 14
         },
@@ -1157,7 +1331,7 @@
           "pin": false,
           "color": "#7EB26D",
           "alias": "idleJobsAtVOCMS095",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms095\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-6@vocms095.cern.ch\"",
           "type": "lucene",
           "id": 20
         },
@@ -1166,7 +1340,7 @@
           "pin": false,
           "color": "#82B5D8",
           "alias": "runningJobsAtVOCMS095",
-          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_vocms095\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3-6@vocms095.cern.ch\"",
           "type": "lucene",
           "id": 21
         },
@@ -1175,7 +1349,7 @@
           "pin": false,
           "color": "#E5A8E2",
           "alias": "heldJobsAtVOCMS095",
-          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_vocms095\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3-6@vocms095.cern.ch\"",
           "type": "lucene",
           "id": 22
         },
@@ -1184,7 +1358,7 @@
           "pin": false,
           "color": "#EAB839",
           "alias": "idleJobsAtVOCMS096",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms096\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3test-3@vocms096.cern.ch\"",
           "type": "lucene",
           "id": 23
         },
@@ -1193,7 +1367,7 @@
           "pin": false,
           "color": "#629E51",
           "alias": "runningJobsAtVOCMS096",
-          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_vocms096\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3test-3@vocms096.cern.ch\"",
           "type": "lucene",
           "id": 24
         },
@@ -1202,7 +1376,7 @@
           "pin": false,
           "color": "#E5AC0E",
           "alias": "heldJobsAtVOCMS096",
-          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_vocms096\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3test-3@vocms096.cern.ch\"",
           "type": "lucene",
           "id": 25
         },
@@ -1211,7 +1385,7 @@
           "pin": false,
           "color": "#6ED0E0",
           "alias": "idleJobsAtVOCMS0114",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms0114\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-7@vocms0114.cern.ch\"",
           "type": "lucene",
           "id": 26
         },
@@ -1220,7 +1394,7 @@
           "pin": false,
           "color": "#E0752D",
           "alias": "runningJobsAtVOCMS0114",
-          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_vocms0114\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3-7@vocms0114.cern.ch\"",
           "type": "lucene",
           "id": 27
         },
@@ -1229,7 +1403,7 @@
           "pin": false,
           "color": "#BF1B00",
           "alias": "heldJobsAtVOCMS0114",
-          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_vocms0114\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3-7@vocms0114.cern.ch\"",
           "type": "lucene",
           "id": 28
         },
@@ -1238,7 +1412,7 @@
           "pin": false,
           "color": "#EF843C",
           "alias": "idleJobsAtVOCMS0109",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms0109\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-2@vocms0109.cern.ch\"",
           "type": "lucene",
           "id": 29
         },
@@ -1247,7 +1421,7 @@
           "pin": false,
           "color": "#962D82",
           "alias": "runningJobsAtVOCMS0109",
-          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_vocms0109\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3-2@vocms0109.cern.ch\"",
           "type": "lucene",
           "id": 30
         },
@@ -1256,7 +1430,7 @@
           "pin": false,
           "color": "#614D93",
           "alias": "heldJobsAtVOCMS0109",
-          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_vocms0109\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3-2@vocms0109.cern.ch\"",
           "type": "lucene",
           "id": 31
         },
@@ -1265,7 +1439,7 @@
           "pin": false,
           "color": "#E24D42",
           "alias": "idleJobsAtSUBMIT-5",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_submit-5\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-1@submit-5.t2.ucsd.edu\"",
           "type": "lucene",
           "id": 32
         },
@@ -1274,7 +1448,7 @@
           "pin": false,
           "color": "#F2C96D",
           "alias": "runningJobsAtSUBMIT-5",
-          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_submit-5\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3-1@submit-5.t2.ucsd.edu\"",
           "type": "lucene",
           "id": 33
         },
@@ -1283,7 +1457,7 @@
           "pin": false,
           "color": "#65C5DB",
           "alias": "heldJobsAtSUBMIT-5",
-          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_submit-5\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3-1@submit-5.t2.ucsd.edu\"",
           "type": "lucene",
           "id": 34
         },
@@ -1301,7 +1475,7 @@
           "pin": false,
           "color": "#1F78C1",
           "alias": "vocms059Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms059\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-5@vocms059.cern.ch\"",
           "type": "lucene",
           "id": 36
         },
@@ -1310,7 +1484,7 @@
           "pin": false,
           "color": "#1F78C1",
           "alias": "vocms059SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms059\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-5@vocms059.cern.ch\"",
           "type": "lucene",
           "id": 37
         },
@@ -1319,7 +1493,7 @@
           "pin": false,
           "color": "#1F78C1",
           "alias": "idleJobsAtvocms059",
-          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_vocms059\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-5@vocms059.cern.ch\"",
           "type": "lucene",
           "id": 38
         },
@@ -1328,7 +1502,7 @@
           "pin": false,
           "color": "#BA43A9",
           "alias": "vocms066Shadows",
-          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_vocms066\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-4@vocms066.cern.ch\"",
           "type": "lucene",
           "id": 39
         },
@@ -1337,7 +1511,7 @@
           "pin": false,
           "color": "#BA43A9",
           "alias": "vocms066IdleJobs",
-          "query": "vocms045 AND @message.nv_name:number_of_idle_jobs_for_at_vocms066",
+          "query": "vocms045 AND @message.nv_name:number_of_idle_jobs_for_at_crab3-4@vocms066.cern.ch",
           "type": "lucene",
           "id": 40
         },
@@ -1346,9 +1520,144 @@
           "pin": false,
           "color": "#BA43A9",
           "alias": "vocms066SchedulersRunning",
-          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_vocms066\"",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-4@vocms066.cern.ch\"",
           "type": "lucene",
           "id": 41
+        },
+        "42": {
+          "enable": true,
+          "pin": true,
+          "color": "#2F575E",
+          "alias": "tmpNew",
+          "query": "vocms045 AND @message.nv_name:\"numberOfTasksIn_NEW_State\"",
+          "type": "lucene",
+          "id": 42
+        },
+        "43": {
+          "enable": true,
+          "pin": true,
+          "color": "#99440A",
+          "alias": "tmpResubmit",
+          "query": "vocms045 AND @message.nv_name:\"numberOfTasksIn_RESUBMIT_State\"",
+          "type": "lucene",
+          "id": 43
+        },
+        "44": {
+          "enable": true,
+          "pin": true,
+          "color": "#58140C",
+          "alias": "tmpKill",
+          "query": "vocms045 AND @message.nv_name:\"numberOfTasksIn_KILL_State\"",
+          "type": "lucene",
+          "id": 44
+        },
+        "45": {
+          "enable": true,
+          "pin": false,
+          "color": "#584477",
+          "alias": "idleJobsAtVOCMS095-2",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3test-2@vocms095.cern.ch\"",
+          "type": "lucene",
+          "id": 45
+        },
+        "46": {
+          "enable": true,
+          "pin": false,
+          "color": "#584477",
+          "alias": "runningJobsAtVOCMS095-2",
+          "query": "vocms045 AND @message.nv_name:\"number_of_running_jobs_running_for_at_crab3test-2@vocms095.cern.ch\"",
+          "type": "lucene",
+          "id": 46
+        },
+        "47": {
+          "enable": true,
+          "pin": false,
+          "color": "#584477",
+          "alias": "heldJobsAtVOCMS095-2",
+          "query": "vocms045 AND @message.nv_name:\"number_of_held_jobs_for_at_crab3test-2@vocms095.cern.ch\"",
+          "type": "lucene",
+          "id": 47
+        },
+        "48": {
+          "enable": true,
+          "pin": false,
+          "color": "#584477",
+          "alias": "vocms095Shadows-2",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3test-2@vocms095.cern.ch\"",
+          "type": "lucene",
+          "id": 48
+        },
+        "49": {
+          "enable": true,
+          "pin": false,
+          "color": "#584477",
+          "alias": "vocms095SchedulersRunning-2",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3test-2@vocms095.cern.ch\"",
+          "type": "lucene",
+          "id": 49
+        },
+        "50": {
+          "enable": true,
+          "pin": false,
+          "color": "#FFFF13",
+          "alias": "submit-4Shadows",
+          "query": "vocms045 AND @message.nv_name:\"number_of_shadows_process_for_crab3-3@submit-4.t2.ucsd.edu\"",
+          "type": "lucene",
+          "id": 50
+        },
+        "51": {
+          "enable": true,
+          "pin": false,
+          "color": "#FFFF13",
+          "alias": "idleJobsAtSUBMIT-4",
+          "query": "vocms045 AND @message.nv_name:\"number_of_idle_jobs_for_at_crab3-3@submit-4.t2.ucsd.edu\"",
+          "type": "lucene",
+          "id": 51
+        },
+        "52": {
+          "enable": true,
+          "pin": false,
+          "color": "#FFFF13",
+          "alias": "submit4SchedulersRunning",
+          "query": "vocms045 AND @message.nv_name:\"number_of_schedulers_jobs_running_for_crab3-3@submit-4.t2.ucsd.edu\"",
+          "type": "lucene",
+          "id": 52
+        },
+        "53": {
+          "enable": true,
+          "pin": true,
+          "color": "#E5AC0E",
+          "alias": "tmpQueued",
+          "query": "vocms045 AND @message.nv_name:\"numberOfTasksIn_QUEUED_State\"",
+          "type": "lucene",
+          "id": 53
+        },
+        "54": {
+          "id": 54,
+          "color": "#F9D9F9",
+          "alias": "KILLFAILED",
+          "pin": true,
+          "type": "lucene",
+          "enable": true,
+          "query": "vocms045 AND @message.nv_name:\"number_of_KILLFAILED_tasks_in_the_last_minute\""
+        },
+        "55": {
+          "id": 55,
+          "color": "#DEDAF7",
+          "alias": "SUBMITFAILED",
+          "pin": true,
+          "type": "lucene",
+          "enable": true,
+          "query": "vocms045 AND @message.nv_name:\"number_of_SUBMITFAILED_tasks_in_the_last_minute\""
+        },
+        "56": {
+          "id": 56,
+          "color": "#7EB26D",
+          "alias": "RESUBMITFAILED",
+          "pin": true,
+          "type": "lucene",
+          "enable": true,
+          "query": "vocms045 AND @message.nv_name:\"number_of_RESUBMITFAILED_tasks_in_the_last_minute\""
         }
       },
       "ids": [
@@ -1393,7 +1702,22 @@
         38,
         39,
         40,
-        41
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
       ],
       "idQueue": [
         0,
