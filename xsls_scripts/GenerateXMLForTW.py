@@ -48,7 +48,7 @@ class CRAB3CreateXML(object):
             self.logger.debug("Error in getCountTasksByStatus: %s"%str(e))
             return []
 
-    def getCountTaskByStatusAbs(self):
+    def getCountTasksByStatusAbs(self):
         try:
             resturi = "/crabserver/prod/task"
             configreq = { 'minutes': "1000000000", 'subresource': "counttasksbystatus" }
@@ -89,13 +89,17 @@ class CRAB3CreateXML(object):
         now_utc = datetime.now().strftime(fmt)
         child_timestamp = SubElement(root, "timestamp")
         child_timestamp.text = str(now_utc)
-        child_availability = SubElement(root, "availability")
+
+        child_status = SubElement(root,"status")
+
         if subprocesses_config == proccess_count:
             # This means that everything is fine
-            child_availability.text = "100"
+            child_status.text = "available"
         else:
-            child_availability.text = str((100/subprocesses_config)*proccess_count)
+            child_status.text = "degraded"
 
+
+        #child_status.text = "available"
 
         # print "TaskWorker version: %s "%__tw__version__ # does not work yet
 
@@ -104,7 +108,7 @@ class CRAB3CreateXML(object):
         data = SubElement(root, "data")
 
         if len(twStatus) > 0:
-            for name in ['SUBMITTED', 'FAILED', 'QUEUED', 'NEW', 'KILLED']:
+            for name in ['SUBMITTED', 'FAILED', 'QUEUED', 'NEW', 'KILLED', 'KILLFAILED', 'RESUBMITFAILED', 'SUBMITFAILED']:
                 numericval = SubElement(data, "numericvalue")
                 numericval.set("name","number_of_%s_tasks_in_the_last_minute"%(name))
                 if twStatus.has_key(name):
@@ -112,17 +116,17 @@ class CRAB3CreateXML(object):
                 else:
                     numericval.text = '0'
         else:
-            for name in ['SUBMITTED', 'FAILED', 'QUEUED', 'NEW', 'KILLED']:
+            for name in ['SUBMITTED', 'FAILED', 'QUEUED', 'NEW', 'KILLED', 'KILLFAILED', 'RESUBMITFAILED', 'SUBMITFAILED']:
                 numericval = SubElement(data, "numericvalue")
                 numericval.set("name","number_of_%s_tasks_in_the_last_minute"%(name))
                 numericval.text = 'n/a'
  
 
         # get the absolut number of tasks per status
-        twStatus = self.getCountTasksByStatus()
+        twStatus = self.getCountTasksByStatusAbs()
 
         if len(twStatus) > 0:
-            for name in ['KILL', 'RESUBMIT', 'NEW']:
+            for name in ['KILL', 'RESUBMIT', 'NEW', 'QUEUED', 'KILLFAILED', 'RESUBMITFAILED', 'SUBMITFAILED', 'UPLOADED']:
                 numericval = SubElement(data, "numericvalue")
                 numericval.set("name","numberOfTasksIn_%s_State"%(name))
                 if twStatus.has_key(name):
@@ -130,7 +134,7 @@ class CRAB3CreateXML(object):
                 else:
                     numericval.text = '0'
         else:
-            for name in ['KILL', 'RESUBMIT', 'NEW']:
+            for name in ['KILL', 'RESUBMIT', 'NEW', 'QUEUED', 'KILLFAILED', 'RESUBMITFAILED', 'SUBMITFAILED', 'UPLOADED']:
                 numericval = SubElement(data, "numericvalue")
                 numericval.set("name","numberOfTasksIn_%s_State"%(name))
                 numericval.text = 'n/a'
@@ -207,7 +211,7 @@ if __name__ == '__main__':
     cmd = "curl -i -F file=@/home/crab3/CRAB3_SCHEDD_XML_Report2.xml xsls.cern.ch"
     try:
         pu = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        #logger.debug("Runned pretty well")
     except Exception, e:
         logger.debug(str(e))
+
 
